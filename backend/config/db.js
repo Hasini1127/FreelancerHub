@@ -17,9 +17,6 @@ const pool = mysql.createPool({
 
 const promisePool = pool.promise();
 
-// Create Database if not exists (for setup ease, though schema.sql does it too)
-promisePool.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME}\`;`)
-  .then(() => console.log('Database checked/created.'))
-  .catch(err => console.error('Error creating database:', err));
+
 
 module.exports = promisePool;
