@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreelanceHub - Find the Right Talent</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        :root {
+            --primary-navy: #0a192f;
+            --primary-blue: #2563eb;
+            --light-blue: #eff6ff;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #334155;
+            background-color: #f8fafc;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            padding: 1rem 0;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-navy) !important;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+        }
+        .nav-link {
+            font-weight: 500;
+            color: #475569 !important;
+            transition: color 0.2s;
+        }
+        .nav-link:hover {
+            color: var(--primary-blue) !important;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-navy) 0%, #1e3a8a 100%);
+            color: white;
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-section h1 {
+            font-weight: 800;
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+        .hero-section p {
+            font-size: 1.25rem;
+            color: #e2e8f0;
+            font-weight: 300;
+            margin-bottom: 2.5rem;
+        }
+        .search-box {
+            background: white;
+            padding: 8px;
+            border-radius: 50px;
+            display: flex;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .search-box input {
+            border: none;
+            box-shadow: none;
+            padding-left: 20px;
+            font-size: 1.1rem;
+        }
+        .search-box select {
+            border: none;
+            border-left: 1px solid #e2e8f0;
+            border-radius: 0;
+            font-weight: 500;
+            color: var(--text-muted);
+            box-shadow: none;
+        }
+        .search-box .btn {
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-weight: 600;
+        }
+        
+        /* Section Headings */
+        .section-title {
+            font-weight: 700;
+            color: var(--primary-navy);
+            margin-bottom: 3rem;
+        }
+
+        /* Categories */
+        .category-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            height: 100%;
+        }
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(37,99,235,0.1);
+            border-color: var(--primary-blue);
+        }
+        .category-icon {
+            font-size: 2.5rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+        .category-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--primary-navy);
+            margin-bottom: 0.5rem;
+        }
+        .category-count {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Profile Cards (Demo) */
+        .freelancer-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s;
+        }
+        .freelancer-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.05);
+        }
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+        }
+        .badge-skill {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            font-weight: 500;
+        }
+
+        /* Steps Section */
+        .step-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1.5rem;
+            font-weight: 700;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-navy);
+            color: #94a3b8;
+            padding: 4rem 0 2rem;
+        }
+        footer h5 {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        footer a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.2s;
+            display: block;
+            margin-bottom: 0.75rem;
+        }
+        footer a:hover {
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-layers-fill text-primary me-2"></i>FreelanceHub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-4 me-auto">
+                    <li class="nav-item"><a class="nav-link" href="freelancers.html">Find Freelancers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="projects.html">Find Projects</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#how-it-works">How It Works</a></li>
+                </ul>
+                <ul class="navbar-nav" id="auth-links">
+                    <!-- Injected via JS -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1>Find the Right Talent.<br>Build Better Projects.</h1>
+                    <p>The premier freelance marketplace for connecting top-tier clients with world-class talent in tech, design, and beyond.</p>
+                    
+                    <form class="search-box mx-auto" style="max-width: 700px;" onsubmit="handleHeroSearch(event)">
+                        <input type="text" class="form-control" id="heroSearchQuery" placeholder="What are you looking for? (e.g. 'React Developer')">
+                        <select class="form-select" id="heroSearchType" style="width: 180px;">
+                            <option value="freelancers">Freelancers</option>
+                            <option value="projects">Projects</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
+                    
+                    <div class="mt-4">
+                        <span class="text-white-50 me-3">Popular:</span>
+                        <a href="freelancers.html?category=UI/UX+Design" class="badge bg-light text-dark text-decoration-none py-2 px-3 rounded-pill me-2">UI/UX Design</a>
+                        <a href="freelancers.html?category=Web+Development" class="badge bg-light text-dark text-decoration-none py-2 px-3 rounded-pill me-2">Web Development</a>
+                        <a href="freelancers.html?category=AI+and+Machine+Learning" class="badge bg-light text-dark text-decoration-none py-2 px-3 rounded-pill">AI & ML</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Categories -->
+    <section class="py-5 bg-white">
+        <div class="container py-4">
+            <h2 class="section-title text-center">Explore Popular Categories</h2>
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <a href="freelancers.html?category=Web+Development" class="text-decoration-none">
+                        <div class="category-card">
+                            <i class="bi bi-code-slash category-icon"></i>
+                            <h3 class="category-title">Web Development</h3>
+                            <div class="category-count">10+ Freelancers</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <a href="freelancers.html?category=UI/UX+Design" class="text-decoration-none">
+                        <div class="category-card">
+                            <i class="bi bi-palette category-icon"></i>
+                            <h3 class="category-title">UI/UX Design</h3>
+                            <div class="category-count">5+ Freelancers</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <a href="freelancers.html?category=AI+and+Machine+Learning" class="text-decoration-none">
+                        <div class="category-card">
+                            <i class="bi bi-cpu category-icon"></i>
+                            <h3 class="category-title">AI & Machine Learning</h3>
+                            <div class="category-count">8+ Freelancers</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <a href="freelancers.html?category=Data+Analytics" class="text-decoration-none">
+                        <div class="category-card">
+                            <i class="bi bi-bar-chart category-icon"></i>
+                            <h3 class="category-title">Data Analytics</h3>
+                            <div class="category-count">4+ Freelancers</div>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <a href="freelancers.html?category=Mobile+App+Development" class="text-decoration-none">
+                        <div class="category-card">
+                            <i class="bi bi-phone category-icon"></i>
+                            <h3 class="category-title">Mobile App Dev</h3>
+                            <div class="category-count">6+ Freelancers</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <a href="freelancers.html?category=Python+Development" class="text-decoration-none">
+                        <div class="category-card">
+                            <i class="bi bi-filetype-py category-icon"></i>
+                            <h3 class="category-title">Python Development</h3>
+                            <div class="category-count">7+ Freelancers</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <a href="freelancers.html?category=Database+Development" class="text-decoration-none">
+                        <div class="category-card">
+                            <i class="bi bi-database category-icon"></i>
+                            <h3 class="category-title">Database Dev</h3>
+                            <div class="category-count">5+ Freelancers</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <a href="freelancers.html" class="text-decoration-none">
+                        <div class="category-card d-flex flex-column justify-content-center align-items-center bg-light border-0">
+                            <h3 class="category-title mb-0">Browse All</h3>
+                            <i class="bi bi-arrow-right mt-2 text-primary fs-4"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Rated Freelancers (Demo Data Presentation) -->
+    <section class="py-5">
+        <div class="container py-4">
+            <div class="d-flex justify-content-between align-items-end mb-4">
+                <h2 class="section-title mb-0">Top-Rated Freelancers</h2>
+                <a href="freelancers.html" class="text-primary fw-semibold text-decoration-none">View All <i class="bi bi-arrow-right"></i></a>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="freelancer-card text-center shadow-sm">
+                        <div class="avatar bg-primary text-white">TM</div>
+                        <h4 class="fw-bold mb-1">Tumma Manogna</h4>
+                        <p class="text-primary fw-semibold mb-2">Lead Full-Stack & Cloud Dev</p>
+                        <div class="mb-2 text-warning">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <span class="text-dark fw-bold ms-1">5.0</span>
+                        </div>
+                        <div class="mb-3 text-muted small">
+                            <i class="bi bi-geo-alt me-1"></i>Hyderabad, India • ₹850/hr
+                        </div>
+                        <div class="mb-4">
+                            <span class="badge badge-skill me-1">Web Development</span>
+                            <span class="badge badge-skill me-1">React</span>
+                            <span class="badge badge-skill me-1">Cloud</span>
+                        </div>
+                        <a href="freelancer-profile.html?id=3" class="btn btn-outline-primary w-100">View Profile</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="freelancer-card text-center shadow-sm">
+                        <div class="avatar bg-success text-white">SR</div>
+                        <h4 class="fw-bold mb-1">Sandra Reshma</h4>
+                        <p class="text-success fw-semibold mb-2">Senior AI/ML & Data Scientist</p>
+                        <div class="mb-2 text-warning">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <span class="text-dark fw-bold ms-1">5.0</span>
+                        </div>
+                        <div class="mb-3 text-muted small">
+                            <i class="bi bi-geo-alt me-1"></i>Hyderabad, India • ₹950/hr
+                        </div>
+                        <div class="mb-4">
+                            <span class="badge badge-skill me-1">AI/ML</span>
+                            <span class="badge badge-skill me-1">Python</span>
+                            <span class="badge badge-skill me-1">Data Science</span>
+                        </div>
+                        <a href="freelancer-profile.html?id=27" class="btn btn-outline-success w-100">View Profile</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="freelancer-card text-center shadow-sm">
+                        <div class="avatar bg-info text-white">PS</div>
+                        <h4 class="fw-bold mb-1">Priya Sharma</h4>
+                        <p class="text-info fw-semibold mb-2">Lead UI/UX Designer</p>
+                        <div class="mb-2 text-warning">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <span class="text-dark fw-bold ms-1">5.0</span>
+                        </div>
+                        <div class="mb-3 text-muted small">
+                            <i class="bi bi-geo-alt me-1"></i>Hyderabad, India • ₹750/hr
+                        </div>
+                        <div class="mb-4">
+                            <span class="badge badge-skill me-1">UI/UX Design</span>
+                            <span class="badge badge-skill me-1">Figma</span>
+                            <span class="badge badge-skill me-1">Mobile UI</span>
+                        </div>
+                        <a href="freelancer-profile.html?id=4" class="btn btn-outline-info w-100">View Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- How It Works -->
+    <section id="how-it-works" class="py-5 bg-white border-top border-bottom">
+        <div class="container py-5 text-center">
+            <h2 class="section-title mb-5">How FreelanceHub Works</h2>
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="step-icon">1</div>
+                    <h4 class="fw-bold">Search</h4>
+                    <p class="text-muted">Find the perfect freelancer or project using our powerful filters.</p>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-icon">2</div>
+                    <h4 class="fw-bold">Connect</h4>
+                    <p class="text-muted">Review profiles, portfolios, and send a direct message or proposal.</p>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-icon">3</div>
+                    <h4 class="fw-bold">Agree</h4>
+                    <p class="text-muted">Discuss terms, timelines, and budgets securely on the platform.</p>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-icon">4</div>
+                    <h4 class="fw-bold">Work & Complete</h4>
+                    <p class="text-muted">Collaborate seamlessly and approve the final delivered work.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="py-5">
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h2 class="section-title mb-4">Why Choose FreelanceHub?</h2>
+                    <div class="d-flex mb-4">
+                        <div class="me-3 text-primary fs-3"><i class="bi bi-shield-check"></i></div>
+                        <div>
+                            <h5 class="fw-bold">Verified Professionals</h5>
+                            <p class="text-muted">We ensure all freelancers meet our rigorous quality standards before joining.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-4">
+                        <div class="me-3 text-primary fs-3"><i class="bi bi-wallet2"></i></div>
+                        <div>
+                            <h5 class="fw-bold">Secure Transactions</h5>
+                            <p class="text-muted">Your funds are held securely until you are 100% satisfied with the work.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="me-3 text-primary fs-3"><i class="bi bi-headset"></i></div>
+                        <div>
+                            <h5 class="fw-bold">24/7 Support</h5>
+                            <p class="text-muted">Our dedicated team is always here to help you resolve any issues instantly.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <div class="p-5 bg-light rounded-4 border">
+                        <h3 class="fw-bold mb-3">Ready to get started?</h3>
+                        <p class="text-muted mb-4">Join thousands of businesses and freelancers today.</p>
+                        <div class="d-grid gap-2 d-md-block">
+                            <a href="register.html?role=client" class="btn btn-primary btn-lg px-4 me-md-2">Hire a Freelancer</a>
+                            <a href="register.html?role=freelancer" class="btn btn-outline-primary btn-lg px-4">Find Work</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4">
+                    <h3 class="text-white fw-bold mb-3"><i class="bi bi-layers-fill text-primary me-2"></i>FreelanceHub</h3>
+                    <p>The premier academic demonstration freelance marketplace connecting top clients with world-class freelancers.</p>
+                </div>
+                <div class="col-lg-2 offset-lg-2 col-md-4">
+                    <h5>For Clients</h5>
+                    <a href="freelancers.html">Find Freelancers</a>
+                    <a href="register.html?role=client">Post a Project</a>
+                    <a href="#">Trust & Safety</a>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <h5>For Freelancers</h5>
+                    <a href="projects.html">Find Projects</a>
+                    <a href="register.html?role=freelancer">Create Profile</a>
+                    <a href="#">Success Stories</a>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <h5>Platform</h5>
+                    <a href="#">About Us</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Privacy Policy</a>
+                </div>
+            </div>
+            <div class="text-center pt-4 border-top border-secondary">
+                <p class="mb-0">&copy; 2026 FreelanceHub. Academic Demo Project.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        function handleHeroSearch(e) {
+            e.preventDefault();
+            const query = document.getElementById('heroSearchQuery').value;
+            const type = document.getElementById('heroSearchType').value;
+            
+            if (type === 'freelancers') {
+                window.location.href = `freelancers.html?search=${encodeURIComponent(query)}`;
+            } else {
+                window.location.href = `projects.html?search=${encodeURIComponent(query)}`;
+            }
+        }
+    </script>
+</body>
+
+</html>

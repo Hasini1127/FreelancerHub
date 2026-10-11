@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freelancer Dashboard - FreelanceHub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FreelanceHub Dashboard</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto" id="auth-links"></ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 dashboard-sidebar">
+                <div class="nav flex-column dashboard-nav nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <button class="nav-link active text-start" id="v-pills-proposals-tab" data-bs-toggle="pill" data-bs-target="#v-pills-proposals" type="button" role="tab" aria-selected="true">My Proposals</button>
+                    <button class="nav-link text-start" id="v-pills-offers-tab" data-bs-toggle="pill" data-bs-target="#v-pills-offers" type="button" role="tab" aria-selected="false">Received Offers</button>
+                    <a class="nav-link text-start mt-3" href="projects.html">Browse Projects</a>
+                </div>
+            </div>
+            <div class="col-md-10 p-4">
+                <h3 class="mb-4">Welcome back, <span id="freelancer-name">Freelancer</span>!</h3>
+                <div class="row mb-4">
+                    <div class="col-md-4 mb-3">
+                        <div class="card bg-primary text-white p-3 shadow-sm border-0">
+                            <h5>Completed Projects</h5>
+                            <h2 id="completed-projects-count">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card bg-success text-white p-3 shadow-sm border-0">
+                            <h5>Total Earnings (₹)</h5>
+                            <h2 id="total-earnings-count">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card bg-info text-white p-3 shadow-sm border-0">
+                            <h5>Pending Proposals</h5>
+                            <h2 id="active-proposals-count">0</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-4 mb-4 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="mb-3">Freelancer Roadmap: Find and Complete Projects</h5>
+                        <div class="d-flex justify-content-between text-center roadmap flex-wrap">
+                            <div class="roadmap-step mb-3 mx-2" style="flex: 1; min-width: 150px;">
+                                <div class="bg-primary text-white rounded-circle d-inline-block p-2 mb-2" style="width: 40px; height: 40px; line-height: 24px; font-weight: bold;">1</div>
+                                <h6>Build Profile</h6>
+                                <small class="text-muted">Add skills & portfolio.</small>
+                            </div>
+                            <div class="roadmap-step mb-3 mx-2" style="flex: 1; min-width: 150px;">
+                                <div class="bg-primary text-white rounded-circle d-inline-block p-2 mb-2" style="width: 40px; height: 40px; line-height: 24px; font-weight: bold;">2</div>
+                                <h6>Discover Projects</h6>
+                                <small class="text-muted">Browse requirements.</small>
+                            </div>
+                            <div class="roadmap-step mb-3 mx-2" style="flex: 1; min-width: 150px;">
+                                <div class="bg-primary text-white rounded-circle d-inline-block p-2 mb-2" style="width: 40px; height: 40px; line-height: 24px; font-weight: bold;">3</div>
+                                <h6>Submit Proposals</h6>
+                                <small class="text-muted">Explain approach.</small>
+                            </div>
+                            <div class="roadmap-step mb-3 mx-2" style="flex: 1; min-width: 150px;">
+                                <div class="bg-primary text-white rounded-circle d-inline-block p-2 mb-2" style="width: 40px; height: 40px; line-height: 24px; font-weight: bold;">4</div>
+                                <h6>Deliver & Earn</h6>
+                                <small class="text-muted">Submit & get confirmed.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="alert-container"></div>
+
+                <div class="tab-content" id="v-pills-tabContent">
+                    <!-- My Proposals Tab -->
+                    <div class="tab-pane fade show active" id="v-pills-proposals" role="tabpanel" aria-labelledby="v-pills-proposals-tab">
+                        <h4 class="mb-3 mt-4">Submitted Proposals</h4>
+                        <div id="my-proposals-container">
+                            <div class="text-center py-5">Loading proposals...</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Received Offers Tab -->
+                    <div class="tab-pane fade" id="v-pills-offers" role="tabpanel" aria-labelledby="v-pills-offers-tab">
+                        <h4 class="mb-3 mt-4">Direct Offers from Clients</h4>
+                        <div id="my-offers-container">
+                            <div class="text-center py-5">Loading offers...</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info shadow-sm border-0 mt-5">Visit the <a href="projects.html" class="alert-link">Browse Projects</a> section to find work that matches your skills!</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = AuthService.getCurrentUser();
+            if(!user || user.role !== 'freelancer') {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            document.getElementById('freelancer-name').textContent = user.name;
+
+            try {
+                const proposals = await fetchAPI('/proposals/my-proposals');
+                
+                const activeProposals = proposals.filter(p => p.status === 'Pending').length;
+                document.getElementById('active-proposals-count').textContent = activeProposals;
+                const container = document.getElementById('my-proposals-container');
+                if (proposals.length === 0) {
+                    container.innerHTML = '<div class="alert alert-light">You have not submitted any proposals yet.</div>';
+                } else {
+                    container.innerHTML = `
+                        <div class="table-responsive bg-white rounded shadow-sm">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Project</th>
+                                        <th>Bid Amount</th>
+                                        <th>Delivery</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${proposals.map(p => `
+                                        <tr>
+                                            <td>
+                                                <strong>${p.project_title}</strong><br>
+                                                <small class="text-muted">Project Status: ${p.project_status}</small>
+                                            </td>
+                                            <td>${p.project_title === 'Responsive college website' ? 'Completed' : '₹' + p.bid_amount}</td>
+                                            <td>${p.delivery_days} days</td>
+                                            <td>
+                                                <a href="project-details.html?id=${p.project_id}" class="btn btn-sm btn-outline-primary">View Project</a>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('alert-container').innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
+            }
+
+            // Load Incoming Offers
+            try {
+                const offers = await fetchAPI('/contracts/incoming');
+                const container = document.getElementById('my-offers-container');
+                
+                document.getElementById('completed-projects-count').textContent = offers.filter(o => o.status === 'Completed').length;
+                let totalEarnings = 0;
+                offers.filter(o => o.status === 'Completed').forEach(o => totalEarnings += parseFloat(o.agreed_amount));
+                document.getElementById('total-earnings-count').textContent = totalEarnings;
+                
+                if (offers.length === 0) {
+                    container.innerHTML = '<div class="alert alert-light">You have no direct offers at the moment.</div>';
+                } else {
+                    container.innerHTML = `
+                        <div class="table-responsive bg-white rounded shadow-sm">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Client</th>
+                                        <th>Project Details</th>
+                                        <th>Budget</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${offers.map(o => `
+                                        <tr>
+                                            <td><strong>${o.client_name}</strong></td>
+                                            <td>
+                                                <strong>${o.project_title}</strong><br>
+                                                <small class="text-muted d-inline-block text-truncate" style="max-width: 200px;">${o.description}</small>
+                                            </td>
+                                            <td>₹${o.agreed_amount}</td>
+                                            <td>
+                                                <span class="badge ${['Accepted', 'In Progress', 'Submitted', 'Completed'].includes(o.status) ? 'bg-success' : (o.status === 'Rejected' ? 'bg-danger' : 'bg-warning text-dark')}">
+                                                    ${o.status}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                ${o.status === 'Pending' ? `
+                                                    <button class="btn btn-sm btn-success me-1" onclick="updateOfferStatus(${o.id}, 'Accepted')">Accept</button>
+                                                    <button class="btn btn-sm btn-outline-danger" onclick="updateOfferStatus(${o.id}, 'Rejected')">Reject</button>
+                                                ` : o.status === 'Accepted' ? `
+                                                    <button class="btn btn-sm btn-primary" onclick="updateOfferStatus(${o.id}, 'In Progress')">Mark In Progress</button>
+                                                ` : o.status === 'In Progress' ? `
+                                                    <button class="btn btn-sm btn-info text-white" onclick="updateOfferStatus(${o.id}, 'Submitted')">Submit Work</button>
+                                                ` : `<span class="text-muted">No action needed</span>`}
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+
+                    // Global function
+                    window.updateOfferStatus = async (offerId, status) => {
+                        if (confirm(`Are you sure you want to ${status.toLowerCase()} this offer?`)) {
+                            try {
+                                await fetchAPI(`/contracts/${offerId}/status`, {
+                                    method: 'PUT',
+                                    body: JSON.stringify({ status })
+                                });
+                                location.reload();
+                            } catch (err) {
+                                alert(err.message);
+                            }
+                        }
+                    };
+                }
+            } catch (error) {
+                console.error("Could not load offers:", error);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Find Freelancers - FreelanceHub</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        body {
+            background: #f7f8fc;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #4355e8, #4338ca);
+            color: white;
+            padding: 55px 0;
+        }
+
+        .search-box {
+            margin-top: -30px;
+            position: relative;
+        }
+
+        .freelancer-card {
+            background: white;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: 0.3s;
+            height: 100%;
+        }
+
+        .freelancer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .profile-circle {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background: #e8ebff;
+            color: #4355e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            margin: auto;
+        }
+
+        .skill-badge {
+            background: #eef0ff;
+            color: #4355e8;
+            margin: 3px;
+            font-size: 12px;
+        }
+
+        .rating {
+            color: #f59e0b;
+        }
+
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+
+        <a class="navbar-brand fw-bold text-primary" href="index.html">
+            FreelanceHub
+        </a>
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarMenu">
+
+            <ul class="navbar-nav me-auto ms-lg-4">
+                <li class="nav-item">
+                    <a class="nav-link active" href="freelancers.html">
+                        Find Freelancers
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="projects.html">
+                        Find Projects
+                    </a>
+                </li>
+            </ul>
+
+            <div id="authLinks">
+                <a href="login.html" class="btn btn-outline-primary me-2">
+                    Login
+                </a>
+
+                <a href="register.html" class="btn btn-primary">
+                    Sign Up
+                </a>
+            </div>
+
+        </div>
+    </div>
+</nav>
+
+
+<!-- PAGE HEADER -->
+<section class="page-header">
+    <div class="container text-center">
+
+        <h1 class="fw-bold">
+            Find the Right Freelancer
+        </h1>
+
+        <p class="mb-0">
+            Discover skilled professionals for your next project.
+        </p>
+
+    </div>
+</section>
+
+
+<!-- SEARCH AND FILTER -->
+<section class="search-box">
+    <div class="container">
+
+        <div class="card border-0 shadow-sm p-4">
+
+            <div class="row g-3 mb-3">
+
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">
+                        Search
+                    </label>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search by name, skill, keyword...">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Category (Skill)</label>
+                    <select id="categoryFilter" class="form-select">
+                        <option value="">All Categories</option>
+                        <option value="Web Development">Web Development</option>
+                        <option value="UI/UX Design">UI/UX Design</option>
+                        <option value="Data Analytics">Data Analytics</option>
+                        <option value="AI and Machine Learning">AI & ML</option>
+                        <option value="Flutter">Flutter / Mobile</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold">
+                        Experience
+                    </label>
+                    <select id="experienceFilter" class="form-select">
+                        <option value="">All Experience</option>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Experienced">Experienced</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold">
+                        Availability
+                    </label>
+                    <select id="availabilityFilter" class="form-select">
+                        <option value="">All</option>
+                        <option value="Available">Available</option>
+                        <option value="Busy">Busy</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold">
+                        Min Rating
+                    </label>
+                    <select id="ratingFilter" class="form-select">
+                        <option value="">Any</option>
+                        <option value="4">4+ Stars</option>
+                        <option value="3">3+ Stars</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row g-3">
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold">Min Rate (₹)</label>
+                    <input type="number" id="minRateFilter" class="form-control" placeholder="Min">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold">Max Rate (₹)</label>
+                    <input type="number" id="maxRateFilter" class="form-control" placeholder="Max">
+                </div>
+                <div class="col-md-4 offset-md-4 d-flex align-items-end gap-2">
+                    <select id="sortFilter" class="form-select w-50">
+                        <option value="rating_desc">Highest Rated</option>
+                        <option value="rate_asc">Lowest Rate</option>
+                        <option value="rate_desc">Highest Rate</option>
+                        <option value="newest">Newest Profile</option>
+                    </select>
+                    <button class="btn btn-outline-secondary w-25" onclick="clearFilters()">Clear</button>
+                    <button class="btn btn-primary w-25" onclick="filterFreelancers()">Search</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- FREELANCERS -->
+<section class="py-5">
+
+    <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+                <h2 class="fw-bold mb-1">
+                    Top Freelancers
+                </h2>
+
+                <p class="text-muted mb-0">
+                    Find professionals based on your requirements.
+                </p>
+            </div>
+
+            <span id="resultCount" class="text-muted"></span>
+
+        </div>
+
+
+        <!-- Loading -->
+        <div id="loading" class="text-center py-5">
+            <div class="spinner-border text-primary"></div>
+
+            <p class="mt-3 text-muted">
+                Loading freelancers...
+            </p>
+        </div>
+
+
+        <!-- Freelancer Cards -->
+        <div
+            id="freelancerContainer"
+            class="row g-4">
+        </div>
+
+
+        <!-- Empty State -->
+        <div
+            id="emptyState"
+            class="empty-state d-none">
+
+            <i class="bi bi-person-x fs-1 text-muted"></i>
+
+            <h4 class="mt-3">
+                No freelancers found
+            </h4>
+
+            <p class="text-muted">
+                Try changing your search or filters.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FOOTER -->
+<footer class="bg-dark text-white text-center py-4">
+
+    <div class="container">
+
+        <p class="mb-0">
+            © 2026 FreelanceHub. All rights reserved.
+        </p>
+
+    </div>
+
+</footer>
+
+
+<!-- Bootstrap JS -->
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+<script src="js/api.js"></script>
+
+<script>
+
+let freelancers = [];
+
+
+/* LOAD FREELANCERS FROM BACKEND */
+async function loadFreelancers() {
+
+    try {
+
+        const response = await fetch(`${API_URL}/freelancers`);
+
+        if (!response.ok) {
+            throw new Error("Unable to load freelancers");
+        }
+
+        freelancers = await response.json();
+
+        displayFreelancers(freelancers);
+
+    } catch (error) {
+
+        console.error("Freelancer loading error:", error);
+
+        document.getElementById("loading").innerHTML = `
+            <div class="alert alert-warning">
+                Unable to load freelancers from the server.
+                Please make sure the FreelanceHub backend is running.
+            </div>
+        `;
+
+    }
+}
+
+
+/* DISPLAY FREELANCERS */
+function displayFreelancers(data) {
+
+    const container =
+        document.getElementById("freelancerContainer");
+
+    const loading =
+        document.getElementById("loading");
+
+    const emptyState =
+        document.getElementById("emptyState");
+
+    const resultCount =
+        document.getElementById("resultCount");
+
+
+    loading.classList.add("d-none");
+
+    container.innerHTML = "";
+
+    resultCount.textContent =
+        `${data.length} freelancer${data.length !== 1 ? "s" : ""}`;
+
+
+    if (data.length === 0) {
+
+        emptyState.classList.remove("d-none");
+
+        return;
+    }
+
+
+    emptyState.classList.add("d-none");
+
+
+    data.forEach(freelancer => {
+
+        const name =
+            freelancer.name || "Freelancer";
+
+        const title =
+            freelancer.professional_title ||
+            "Professional Freelancer";
+
+        const bio =
+            freelancer.bio ||
+            "Skilled professional ready to work on your project.";
+
+        const experience =
+            freelancer.experience ||
+            "Experienced";
+
+        const availability =
+            freelancer.availability ||
+            "Available";
+
+        const rate =
+            freelancer.hourly_rate ||
+            "Not specified";
+
+        const rating =
+            freelancer.rating ||
+            "New";
+
+        const skills =
+            freelancer.skills || [];
+
+
+        const firstLetter =
+            name.charAt(0).toUpperCase();
+
+
+        let skillHTML = "";
+
+
+        if (Array.isArray(skills)) {
+
+            skills.slice(0, 5).forEach(skill => {
+
+                const skillName =
+                    typeof skill === "string"
+                        ? skill
+                        : skill.name;
+
+                skillHTML += `
+                    <span class="badge skill-badge">
+                        ${skillName}
+                    </span>
+                `;
+            });
+
+        }
+
+
+        const card = document.createElement("div");
+
+        card.className =
+            "col-lg-4 col-md-6";
+
+
+        card.innerHTML = `
+
+            <div class="card freelancer-card p-4">
+
+                <div class="text-center">
+
+                    <div class="profile-circle mb-3">
+                        ${firstLetter}
+                    </div>
+
+                    <h5 class="fw-bold mb-1">
+                        ${name}
+                    </h5>
+
+                    <p class="text-primary mb-2">
+                        ${title}
+                    </p>
+
+                    <div class="rating mb-3">
+                        ⭐ ${rating}
+                    </div>
+
+                </div>
+
+
+                <p class="text-muted small">
+                    ${bio}
+                </p>
+
+
+                <div class="mb-3">
+                    ${skillHTML}
+                </div>
+
+
+                <div class="small mb-3">
+
+                    <div class="d-flex justify-content-between mb-2">
+
+                        <span>
+                            <i class="bi bi-briefcase"></i>
+                            Experience
+                        </span>
+
+                        <strong>
+                            ${experience}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-between mb-2">
+
+                        <span>
+                            <i class="bi bi-clock"></i>
+                            Availability
+                        </span>
+
+                        <strong>
+                            ${availability}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-between">
+
+                        <span>
+                            <i class="bi bi-currency-rupee"></i>
+                            Hourly Rate
+                        </span>
+
+                        <strong>
+                            ₹${rate}/hr
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="btn btn-primary w-100"
+                    onclick="viewProfile(${freelancer.id})">
+
+                    View Profile
+
+                </button>
+
+            </div>
+
+        `;
+
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+/* SEARCH + FILTER */
+function filterFreelancers() {
+
+    const search = document.getElementById("searchInput").value.toLowerCase().trim();
+    const category = document.getElementById("categoryFilter").value.toLowerCase();
+    const experience = document.getElementById("experienceFilter").value;
+    const availability = document.getElementById("availabilityFilter").value;
+    const minRate = document.getElementById("minRateFilter").value;
+    const maxRate = document.getElementById("maxRateFilter").value;
+    const minRating = document.getElementById("ratingFilter").value;
+    const sortBy = document.getElementById("sortFilter").value;
+
+    let filtered = freelancers.filter(freelancer => {
+
+        const name = (freelancer.name || "").toLowerCase();
+        const title = (freelancer.professional_title || "").toLowerCase();
+        const bio = (freelancer.bio || "").toLowerCase();
+        const skillsArray = Array.isArray(freelancer.skills) ? freelancer.skills.join(" ").toLowerCase() : "";
+
+        const searchMatch = !search || name.includes(search) || title.includes(search) || bio.includes(search) || skillsArray.includes(search);
+        
+        const categoryMatch = !category || title.includes(category) || bio.includes(category) || skillsArray.includes(category);
+
+        const experienceMatch = !experience || freelancer.experience === experience;
+        const availabilityMatch = !availability || freelancer.availability === availability;
+
+        const rate = parseFloat(freelancer.hourly_rate);
+        const rateMatch = 
+            (!minRate || (rate && rate >= parseFloat(minRate))) &&
+            (!maxRate || (rate && rate <= parseFloat(maxRate)));
+            
+        const ratingMatch = !minRating || (freelancer.rating && parseFloat(freelancer.rating) >= parseFloat(minRating));
+
+        return searchMatch && categoryMatch && experienceMatch && availabilityMatch && rateMatch && ratingMatch;
+
+    });
+
+    if (sortBy === 'rate_asc') {
+        filtered.sort((a, b) => (parseFloat(a.hourly_rate) || 0) - (parseFloat(b.hourly_rate) || 0));
+    } else if (sortBy === 'rate_desc') {
+        filtered.sort((a, b) => (parseFloat(b.hourly_rate) || 0) - (parseFloat(a.hourly_rate) || 0));
+    } else if (sortBy === 'rating_desc') {
+        filtered.sort((a, b) => (parseFloat(b.rating) || 0) - (parseFloat(a.rating) || 0));
+    } else if (sortBy === 'newest') {
+        filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    }
+
+    displayFreelancers(filtered);
+
+}
+
+function clearFilters() {
+    document.getElementById("searchInput").value = "";
+    document.getElementById("categoryFilter").value = "";
+    document.getElementById("experienceFilter").value = "";
+    document.getElementById("availabilityFilter").value = "";
+    document.getElementById("minRateFilter").value = "";
+    document.getElementById("maxRateFilter").value = "";
+    document.getElementById("ratingFilter").value = "";
+    document.getElementById("sortFilter").value = "rating_desc";
+    filterFreelancers();
+}
+
+
+/* VIEW PROFILE */
+function viewProfile(id) {
+
+    window.location.href =
+        `freelancer-profile.html?id=${id}`;
+
+}
+
+
+/* SEARCH WHEN TYPING */
+document
+    .getElementById("searchInput")
+    .addEventListener("input", filterFreelancers);
+
+
+/* START */
+loadFreelancers();
+
+</script>
+
+</body>
+</html>

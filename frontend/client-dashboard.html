@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Dashboard - FreelanceHub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FreelanceHub Dashboard</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto" id="auth-links"></ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 dashboard-sidebar">
+                <div class="nav flex-column dashboard-nav nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <button class="nav-link active text-start" id="v-pills-projects-tab" data-bs-toggle="pill" data-bs-target="#v-pills-projects" type="button" role="tab" aria-selected="true">My Projects</button>
+                    <button class="nav-link text-start" id="v-pills-received-proposals-tab" data-bs-toggle="pill" data-bs-target="#v-pills-received-proposals" type="button" role="tab" aria-selected="false">Received Proposals</button>
+                    <button class="nav-link text-start" id="v-pills-offers-tab" data-bs-toggle="pill" data-bs-target="#v-pills-offers" type="button" role="tab" aria-selected="false">My Offers</button>
+                    <a class="nav-link mt-3 btn btn-outline-primary text-center" href="#" data-bs-toggle="modal" data-bs-target="#createProjectModal">Post a Project</a>
+                </div>
+            </div>
+            <div class="col-md-10 p-4">
+                <h3 class="mb-4">Welcome back, <span id="client-name">Client</span>!</h3>
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card bg-primary text-white p-3 shadow-sm border-0">
+                            <h5>Total Posted</h5>
+                            <h2 id="total-projects-count">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-success text-white p-3 shadow-sm border-0">
+                            <h5>Proposals Received</h5>
+                            <h2 id="total-proposals-count">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-info text-white p-3 shadow-sm border-0">
+                            <h5>Freelancers Hired</h5>
+                            <h2 id="total-hired-count">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-secondary text-white p-3 shadow-sm border-0">
+                            <h5>Total Spending (₹)</h5>
+                            <h2 id="total-spending-count">0</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-4 mb-4 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="mb-3">Client Roadmap: Find and Hire a Freelancer</h5>
+                        <div class="d-flex justify-content-between text-center roadmap flex-wrap">
+                            <div class="roadmap-step mb-3 mx-2" style="flex: 1; min-width: 150px;">
+                                <div class="bg-primary text-white rounded-circle d-inline-block p-2 mb-2" style="width: 40px; height: 40px; line-height: 24px; font-weight: bold;">1</div>
+                                <h6>Define Project</h6>
+                                <small class="text-muted">Enter requirements & budget.</small>
+                            </div>
+                            <div class="roadmap-step mb-3 mx-2" style="flex: 1; min-width: 150px;">
+                                <div class="bg-primary text-white rounded-circle d-inline-block p-2 mb-2" style="width: 40px; height: 40px; line-height: 24px; font-weight: bold;">2</div>
+                                <h6>Discover Talent</h6>
+                                <small class="text-muted">Browse freelancer profiles.</small>
+                            </div>
+                            <div class="roadmap-step mb-3 mx-2" style="flex: 1; min-width: 150px;">
+                                <div class="bg-primary text-white rounded-circle d-inline-block p-2 mb-2" style="width: 40px; height: 40px; line-height: 24px; font-weight: bold;">3</div>
+                                <h6>Review & Hire</h6>
+                                <small class="text-muted">Compare proposals & accept.</small>
+                            </div>
+                            <div class="roadmap-step mb-3 mx-2" style="flex: 1; min-width: 150px;">
+                                <div class="bg-primary text-white rounded-circle d-inline-block p-2 mb-2" style="width: 40px; height: 40px; line-height: 24px; font-weight: bold;">4</div>
+                                <h6>Track & Complete</h6>
+                                <small class="text-muted">Monitor, review, and confirm.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="alert-container"></div>
+                <div class="tab-content" id="v-pills-tabContent">
+                    <!-- My Projects Tab -->
+                    <div class="tab-pane fade show active" id="v-pills-projects" role="tabpanel" aria-labelledby="v-pills-projects-tab">
+                        <h3 class="mb-4">My Projects</h3>
+                        <div id="my-projects-container">
+                            <div class="text-center py-5">Loading projects...</div>
+                        </div>
+                    </div>
+
+                    <!-- Received Proposals Tab -->
+                    <div class="tab-pane fade" id="v-pills-received-proposals" role="tabpanel" aria-labelledby="v-pills-received-proposals-tab">
+                        <h3 class="mb-4">Proposals Received</h3>
+                        <div id="received-proposals-container">
+                            <div class="text-center py-5">Loading proposals...</div>
+                        </div>
+                    </div>
+                    
+                    <!-- My Offers Tab -->
+                    <div class="tab-pane fade" id="v-pills-offers" role="tabpanel" aria-labelledby="v-pills-offers-tab">
+                        <h3 class="mb-4">Hired / Direct Offers</h3>
+                        <div id="my-offers-container">
+                            <div class="text-center py-5">Loading offers...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Project Modal -->
+    <div class="modal fade" id="createProjectModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Post a New Project</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="create-project-form">
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Project Title</label>
+                                <input type="text" class="form-control" id="title" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Category</label>
+                                <select class="form-select" id="category" required>
+                                    <option value="Web Development">Web Development</option>
+                                    <option value="Design">Design</option>
+                                    <option value="Writing">Writing</option>
+                                    <option value="Marketing">Marketing</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Experience Level</label>
+                                <select class="form-select" id="experience_level" required>
+                                    <option value="Beginner">Beginner</option>
+                                    <option value="Intermediate">Intermediate</option>
+                                    <option value="Expert">Expert</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Budget ($)</label>
+                                <input type="number" class="form-control" id="budget" required min="1">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Deadline</label>
+                                <input type="date" class="form-control" id="deadline" required>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-control" id="description" rows="5" required></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Post Project</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = AuthService.getCurrentUser();
+            if(!user || user.role !== 'client') {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            document.getElementById('client-name').textContent = user.name;
+
+            const loadMyProjects = async () => {
+                try {
+                    const allProjects = await ProjectService.getAllProjects();
+                    // In a real app, backend would filter this. For demo, we filter on client.
+                    const myProjects = allProjects.filter(p => p.client_id === user.id);
+                    
+                    const container = document.getElementById('my-projects-container');
+                    
+                    if(myProjects.length === 0) {
+                        container.innerHTML = '<div class="alert alert-info">You have not posted any projects yet.</div>';
+                        return;
+                    }
+
+                    container.innerHTML = `
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Project</th>
+                                        <th>Budget</th>
+                                        <th>Status</th>
+                                        <th>Deadline</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${myProjects.map(p => `
+                                        <tr>
+                                            <td><strong>${p.title}</strong><br><small class="text-muted">${p.category}</small></td>
+                                            <td>₹${p.budget}</td>
+                                            <td><span class="badge badge-status-${p.status.replace(/\s+/g, '')}">${p.status}</span></td>
+                                            <td>${new Date(p.deadline).toLocaleDateString()}</td>
+                                            <td>
+                                                <a href="project-details.html?id=${p.id}" class="btn btn-sm btn-outline-primary">View</a>
+                                                <button class="btn btn-sm btn-outline-danger ms-1" onclick="deleteProject(${p.id})">Delete</button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                    document.getElementById('total-projects-count').textContent = myProjects.length;
+                } catch (error) {
+                    showAlert(error.message, 'danger');
+                }
+            };
+
+            const loadMyOffers = async () => {
+                try {
+                    const offers = await fetchAPI('/contracts/client');
+                    const container = document.getElementById('my-offers-container');
+                    
+                    if (offers.length === 0) {
+                        container.innerHTML = '<div class="alert alert-info">You have not sent any direct offers yet.</div>';
+                        return;
+                    }
+
+                    container.innerHTML = `
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Freelancer</th>
+                                        <th>Project / Title</th>
+                                        <th>Budget</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${offers.map(o => `
+                                        <tr>
+                                            <td><strong>${o.freelancer_name}</strong></td>
+                                            <td>${o.project_title}</td>
+                                            <td>₹${o.agreed_amount}</td>
+                                            <td><span class="badge ${o.status === 'Completed' ? 'bg-success' : (o.status === 'Rejected' ? 'bg-danger' : 'bg-primary')}">${o.status}</span></td>
+                                            <td>
+                                                ${o.status === 'Submitted' ? `
+                                                    <button class="btn btn-sm btn-success" onclick="updateOfferStatus(${o.id}, 'Completed')">Mark Completed</button>
+                                                ` : `<span class="text-muted">No action needed</span>`}
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                    document.getElementById('total-hired-count').textContent = offers.filter(o => o.status === 'Accepted' || o.status === 'In Progress' || o.status === 'Completed').length;
+                    
+                    let totalSpent = 0;
+                    offers.filter(o => o.status === 'Completed').forEach(o => totalSpent += parseFloat(o.agreed_amount));
+                    document.getElementById('total-spending-count').textContent = totalSpent;
+
+                    // Global function for client to update offer status
+                    window.updateOfferStatus = async (offerId, status) => {
+                        if (confirm(`Are you sure you want to mark this as ${status}?`)) {
+                            try {
+                                await fetchAPI(`/contracts/${offerId}/status`, {
+                                    method: 'PUT',
+                                    body: JSON.stringify({ status })
+                                });
+                                location.reload();
+                            } catch (err) {
+                                alert(err.message);
+                            }
+                        }
+                    };
+                } catch (error) {
+                    console.error("Could not load offers:", error);
+                }
+            };
+
+            const loadReceivedProposals = async () => {
+                try {
+                    const proposals = await fetchAPI('/proposals/client');
+                    const container = document.getElementById('received-proposals-container');
+                    
+                    if (proposals.length === 0) {
+                        container.innerHTML = '<div class="alert alert-info">No proposals received yet.</div>';
+                        return;
+                    }
+
+                    container.innerHTML = `
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Freelancer</th>
+                                        <th>Project</th>
+                                        <th>Bid Amount</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${proposals.map(p => `
+                                        <tr>
+                                            <td><strong><a href="freelancer-profile.html?id=${p.freelancer_id}" class="text-decoration-none">${p.freelancer_name}</a></strong></td>
+                                            <td>${p.project_title}</td>
+                                            <td>₹${p.bid_amount}</td>
+                                            <td><span class="badge ${p.status === 'Accepted' ? 'bg-success' : (p.status === 'Rejected' ? 'bg-danger' : 'bg-warning text-dark')}">${p.status}</span></td>
+                                            <td>
+                                                <a href="project-details.html?id=${p.project_id}" class="btn btn-sm btn-outline-primary">View</a>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                    document.getElementById('total-proposals-count').textContent = proposals.length;
+                } catch (error) {
+                    console.error("Could not load proposals:", error);
+                }
+            };
+
+            await loadMyProjects();
+            await loadMyOffers();
+            await loadReceivedProposals();
+
+            // Create Project Form
+            document.getElementById('create-project-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const projectData = {
+                    title: document.getElementById('title').value,
+                    category: document.getElementById('category').value,
+                    experience_level: document.getElementById('experience_level').value,
+                    budget: document.getElementById('budget').value,
+                    deadline: document.getElementById('deadline').value,
+                    description: document.getElementById('description').value
+                };
+
+                try {
+                    await ProjectService.createProject(projectData);
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('createProjectModal'));
+                    modal.hide();
+                    document.getElementById('create-project-form').reset();
+                    showAlert('Project posted successfully!', 'success');
+                    await loadMyProjects();
+                } catch (error) {
+                    alert('Error: ' + error.message);
+                }
+            });
+
+            // Make delete global
+            window.deleteProject = async (id) => {
+                if(confirm('Are you sure you want to delete this project?')) {
+                    try {
+                        await fetchAPI(`/projects/${id}`, { method: 'DELETE' });
+                        showAlert('Project deleted', 'success');
+                        await loadMyProjects();
+                    } catch (error) {
+                        showAlert(error.message, 'danger');
+                    }
+                }
+            };
+        });
+    </script>
+</body>
+</html>

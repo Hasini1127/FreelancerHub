@@ -1,0 +1,13 @@
+{
+  "name": "freelancehub",
+  "version": "1.0.0",
+  "description": "FreelanceHub Marketplace Application",
+  "scripts": {
+    "install-backend": "cd backend && npm install",
+    "start": "cd backend && node server.js",
+    "postinstall": "cd backend && npm install"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

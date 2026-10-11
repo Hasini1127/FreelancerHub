@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details - FreelanceHub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">FreelanceHub</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto" id="auth-links"></ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4 mb-5">
+        <div id="project-details-container">
+            <div class="text-center py-5">Loading project details...</div>
+        </div>
+        
+        <!-- Proposals Section (Client Only) -->
+        <div id="proposals-section" class="mt-5" style="display: none;">
+            <h3 class="mb-4">Proposals Received</h3>
+            <div id="proposals-container">
+                <div class="text-center py-5">Loading proposals...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Proposal Modal -->
+    <div class="modal fade" id="proposalModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Submit Proposal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="proposal-alert"></div>
+                    <form id="proposal-form">
+                        <div class="mb-3">
+                            <label class="form-label">Bid Amount (?)</label>
+                            <input type="number" class="form-control" id="bid-amount" required min="1">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Delivery Days</label>
+                            <input type="number" class="form-control" id="delivery-days" required min="1">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Cover Letter</label>
+                            <textarea class="form-control" id="cover-letter" rows="4" required minlength="20"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Submit Proposal</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectId = urlParams.get('id');
+            const container = document.getElementById('project-details-container');
+            const user = AuthService.getCurrentUser();
+
+            if (!projectId) {
+                container.innerHTML = '<div class="alert alert-danger">Project ID missing.</div>';
+                return;
+            }
+
+            try {
+                const project = await ProjectService.getProjectById(projectId);
+                
+                let actionButton = '';
+                if (user && user.role === 'freelancer' && project.status === 'Open') {
+                    actionButton = `<button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#proposalModal">Submit Proposal</button>`;
+                } else if (!user) {
+                    actionButton = `<a href="login.html" class="btn btn-outline-primary">Login to Apply</a>`;
+                }
+
+                container.innerHTML = `
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card p-4">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h2 class="mb-0">${project.title}</h2>
+                                    <span class="badge badge-status-${project.status.replace(/\s+/g, '')} fs-6">${project.status}</span>
+                                </div>
+                                <p class="text-muted">Posted by <strong>${project.client_name}</strong> on ${new Date(project.created_at).toLocaleDateString()}</p>
+                                <hr>
+                                <h4>Project Description</h4>
+                                <p style="white-space: pre-wrap;">${project.description}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card p-4 mb-4">
+                                <h4>Details</h4>
+                                <ul class="list-unstyled mb-0">
+                                    <li class="mb-2"><strong>Budget:</strong> ?${project.budget}</li>
+                                    <li class="mb-2"><strong>Deadline:</strong> ${new Date(project.deadline).toLocaleDateString()}</li>
+                                    <li class="mb-2"><strong>Category:</strong> ${project.category}</li>
+                                    <li><strong>Experience Level:</strong> ${project.experience_level}</li>
+                                </ul>
+                            </div>
+                            <div class="text-center">
+                                ${actionButton}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Handle Proposal Submission
+                const proposalForm = document.getElementById('proposal-form');
+                if(proposalForm) {
+                    proposalForm.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        const bid_amount = document.getElementById('bid-amount').value;
+                        const delivery_days = document.getElementById('delivery-days').value;
+                        const cover_letter = document.getElementById('cover-letter').value;
+                        const alertDiv = document.getElementById('proposal-alert');
+
+                        try {
+                            await ProposalService.submitProposal({
+                                project_id: projectId,
+                                bid_amount,
+                                delivery_days,
+                                cover_letter
+                            });
+                            alertDiv.innerHTML = '<div class="alert alert-success">Proposal submitted successfully!</div>';
+                            setTimeout(() => {
+                                const modal = bootstrap.Modal.getInstance(document.getElementById('proposalModal'));
+                                modal.hide();
+                            }, 1500);
+                        } catch (error) {
+                            alertDiv.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
+                        }
+                    });
+                }
+
+                // If user is the client who posted the project, show proposals
+                if (user && user.role === 'client' && project.client_id === user.id) {
+                    document.getElementById('proposals-section').style.display = 'block';
+                    const proposalsContainer = document.getElementById('proposals-container');
+                    
+                    try {
+                        const proposals = await fetchAPI(`/proposals/project/${projectId}`);
+                        if (proposals.length === 0) {
+                            proposalsContainer.innerHTML = '<div class="alert alert-info border-0 shadow-sm">No proposals received yet.</div>';
+                        } else {
+                            proposalsContainer.innerHTML = proposals.map(p => `
+                                <div class="card mb-4 border-0 shadow-sm">
+                                    <div class="card-body p-4">
+                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                            <div>
+                                                <h5 class="card-title fw-bold">
+                                                    <a href="freelancer-profile.html?id=${p.freelancer_id}" class="text-decoration-none">${p.freelancer_name}</a>
+                                                </h5>
+                                                <h6 class="card-subtitle text-muted mb-2">${new Date(p.created_at).toLocaleDateString()}</h6>
+                                            </div>
+                                            <span class="badge ${p.status === 'Accepted' ? 'bg-success' : (p.status === 'Rejected' ? 'bg-danger' : 'bg-warning text-dark')} fs-6">${p.status}</span>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-3"><strong>Bid Amount:</strong> ?${p.bid_amount}</div>
+                                            <div class="col-md-3"><strong>Delivery:</strong> ${p.delivery_days} days</div>
+                                        </div>
+                                        <h6 class="fw-bold">Cover Letter:</h6>
+                                        <p style="white-space: pre-wrap;" class="text-muted bg-light p-3 rounded">${p.cover_letter}</p>
+                                        
+                                        ${p.status === 'Pending' ? `
+                                            <div class="mt-3">
+                                                <button class="btn btn-success me-2" onclick="updateProposalStatus(${p.id}, 'Accepted')">Accept Proposal</button>
+                                                <button class="btn btn-outline-danger" onclick="updateProposalStatus(${p.id}, 'Rejected')">Reject</button>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            `).join('');
+                            
+                            // Make global function
+                            window.updateProposalStatus = async (proposalId, status) => {
+                                if(confirm(`Are you sure you want to ${status.toLowerCase()} this proposal?`)) {
+                                    try {
+                                        await fetchAPI(`/proposals/${proposalId}`, {
+                                            method: 'PUT',
+                                            body: JSON.stringify({ status })
+                                        });
+                                        location.reload();
+                                    } catch (err) {
+                                        alert(err.message);
+                                    }
+                                }
+                            };
+                        }
+                    } catch (err) {
+                        proposalsContainer.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
+                    }
+                }
+
+            } catch (error) {
+                container.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
+            }
+        });
+    </script>
+</body>
+</html>
