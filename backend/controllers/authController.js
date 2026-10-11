@@ -1,3 +1,4 @@
+
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('../config/db');
@@ -5,31 +6,52 @@ const db = require('../config/db');
 const register = async (req, res) => {
     try {
         const { name, email, password, role } = req.body;
-        
+
         if (!name || !email || !password || !role) {
-            return res.status(400).json({ message: 'Please provide all required fields' });
+            return res.status(400).json({
+                message: 'Please provide all required fields'
+            });
         }
 
-        const [existingUser] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
-        if (existingUser.length > 0) {
-            return res.status(400).json({ message: 'User already exists' });
+        if (!['client', 'freelancer'].includes(role)) {
+            return res.status(400).json({
+                message: 'Invalid role'
+            });
         }
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+        const [users] = await db.query(
+            'SELECT id FROM users WHERE email = ?',
+            [email.trim().toLowerCase()]
+        );
+
+        if (users.length > 0) {
+            return res.status(409).json({
+                message: 'User already exists'
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         const [result] = await db.query(
             'INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)',
-            [name, email, hashedPassword, role]
+            [name.trim(), email.trim().toLowerCase(), hashedPassword, role]
         );
 
         if (role === 'freelancer') {
-            await db.query('INSERT INTO freelancer_profiles (user_id) VALUES (?)', [result.insertId]);
+            await db.query(
+                'INSERT INTO freelancer_profiles (user_id) VALUES (?)',
+                [result.insertId]
+            );
         }
 
-        res.status(201).json({ message: 'User registered successfully' });
+        return res.status(201).json({
+            message: 'User registered successfully'
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        console.error('Registration error:', error.message);
+        return res.status(500).json({
+            message: 'Server error'
+        });
     }
 };
 
@@ -37,16 +59,39 @@ const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        if (!email) {
-            return res.status(400).json({ message: 'Please provide an email' });
+        if (!email || !password) {
+            return res.status(400).json({
+                message: 'Please provide email and password'
+            });
         }
 
-        const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+        const [users] = await db.query(
+            'SELECT * FROM users WHERE email = ?',
+            [email.trim().toLowerCase()]
+        );
+
         if (users.length === 0) {
-            return res.status(401).json({ message: 'User not found with this email' });
+            return res.status(401).json({
+                message: 'User not found with this email'
+            });
         }
 
         const user = users[0];
+
+        const validPassword = await bcrypt.compare(
+            password,
+            user.password
+        );
+
+        if (!validPassword) {
+            return res.status(401).json({
+                message: 'Invalid email or password'
+            });
+        }
+
+        if (!process.env.JWT_SECRET) {
+            throw new Error('JWT_SECRET is not configured');
+        }
 
         const token = jwt.sign(
             { id: user.id, role: user.role },
@@ -54,7 +99,7 @@ const login = async (req, res) => {
             { expiresIn: '30d' }
         );
 
-        res.json({
+        return res.json({
             message: 'Login successful',
             token,
             user: {
@@ -65,19 +110,32 @@ const login = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        console.error('Login error:', error.message);
+        return res.status(500).json({
+            message: 'Server error'
+        });
     }
 };
 
 const getMe = async (req, res) => {
     try {
-        const [users] = await db.query('SELECT id, name, email, role, profile_image FROM users WHERE id = ?', [req.user.id]);
+        const [users] = await db.query(
+            'SELECT id, name, email, role, profile_image FROM users WHERE id = ?',
+            [req.user.id]
+        );
+
         if (users.length === 0) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({
+                message: 'User not found'
+            });
         }
-        res.json(users[0]);
+
+        return res.json(users[0]);
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        console.error('Get user error:', error.message);
+        return res.status(500).json({
+            message: 'Server error'
+        });
     }
 };
 
