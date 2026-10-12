@@ -468,13 +468,18 @@
                             <span class="pill-role bg-info text-dark">Freelancer</span>
                         </div>
 
-                        <!-- Manual Email Input Option -->
-                        <form id="manual-login-form" class="manual-input-box" onsubmit="handleManualSubmit(event)">
-                            <div class="d-flex gap-2">
-                                <input type="email" id="custom-email" placeholder="Or enter any email..." required>
-                                <button type="submit" class="btn btn-sm btn-primary px-3">Go</button>
-                            </div>
-                        </form>
+                      
+<!-- Manual Email and Password Login -->
+<form id="manual-login-form" class="manual-input-box" onsubmit="handleManualSubmit(event)">
+    <div class="d-flex flex-column gap-2">
+        <input type="email" id="custom-email"
+               placeholder="Enter your email" required>
+        <input type="password" id="custom-password"
+               placeholder="Enter your password" required>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </div>
+</form>
+
                     </div>
                 </div>
 
@@ -497,45 +502,38 @@
             }
         }
 
-        async function signInWithAccount(email, cardElement) {
-            const alertContainer = document.getElementById('alert-container');
-            alertContainer.innerHTML = '';
+       
+async function signInWithAccount(email, cardElement, password) {
+    const alertContainer = document.getElementById('alert-container');
+    alertContainer.innerHTML = '';
 
-            // Visual feedback
-            if (cardElement) {
-                cardElement.style.opacity = '0.65';
-                cardElement.style.pointerEvents = 'none';
-            }
+    try {
+        const data = await AuthService.login(email, password);
 
-            try {
-                const data = await AuthService.login(email);
-                
-                // Redirect based on user role
-                if (data.user.role === 'client') {
-                    window.location.href = 'client-dashboard.html';
-                } else {
-                    window.location.href = 'freelancer-dashboard.html';
-                }
-            } catch (error) {
-                alertContainer.innerHTML = `
-                    <div class="alert alert-danger py-2 px-3 small text-start mb-3" role="alert">
-                        ${error.message || 'Unable to sign in. Please try again.'}
-                    </div>
-                `;
-                if (cardElement) {
-                    cardElement.style.opacity = '1';
-                    cardElement.style.pointerEvents = 'auto';
-                }
-            }
+        if (data.user.role === 'client') {
+            window.location.href = 'client-dashboard.html';
+        } else {
+            window.location.href = 'freelancer-dashboard.html';
         }
+    } catch (error) {
+        alertContainer.innerHTML =
+            `<div class="alert alert-danger">${error.message}</div>`;
+    }
+}
 
-        function handleManualSubmit(e) {
-            e.preventDefault();
-            const email = document.getElementById('custom-email').value.trim();
-            if (email) {
-                signInWithAccount(email, null);
-            }
-        }
+
+        
+function handleManualSubmit(e) {
+    e.preventDefault();
+
+    const email = document.getElementById('custom-email').value.trim();
+    const password = document.getElementById('custom-password').value;
+
+    if (email && password) {
+        signInWithAccount(email, null, password);
+    }
+}
+
     </script>
 </body>
 </html>
